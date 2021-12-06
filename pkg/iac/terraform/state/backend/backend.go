@@ -12,6 +12,7 @@ import (
 var supportedBackends = []string{
 	BackendKeyFile,
 	BackendKeyS3,
+	BackendKeySwift,
 	BackendKeyHTTP,
 	BackendKeyHTTPS,
 	BackendKeyTFCloud,
@@ -47,6 +48,8 @@ func GetBackend(config config.SupplierConfig, opts *Options) (Backend, error) {
 		return NewFileReader(config.Path)
 	case BackendKeyS3:
 		return NewS3Reader(config.Path)
+	case BackendKeySwift:
+		return NewSwiftReader(config.Path)
 	case BackendKeyHTTP:
 		fallthrough
 	case BackendKeyHTTPS:

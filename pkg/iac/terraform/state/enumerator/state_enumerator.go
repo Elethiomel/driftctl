@@ -18,6 +18,8 @@ func GetEnumerator(config config.SupplierConfig) StateEnumerator {
 		return NewFileEnumerator(config)
 	case backend.BackendKeyS3:
 		return NewS3Enumerator(config)
+	case backend.BackendKeySwift:
+		return NewSwiftEnumerator(config)
 	}
 
 	logrus.WithFields(logrus.Fields{

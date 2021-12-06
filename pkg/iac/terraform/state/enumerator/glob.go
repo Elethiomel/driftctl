@@ -10,7 +10,7 @@ import (
 	"github.com/bmatcuk/doublestar/v4"
 )
 
-func GlobS3(path string) (prefix string, pattern string) {
+func GlobObjectStorage(path string) (prefix string, pattern string) {
 	prefix, pattern = splitDirPattern(path)
 	return
 }

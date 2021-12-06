@@ -24,13 +24,11 @@ func NewSwiftEnumerator(config config.SupplierConfig) *SwiftEnumerator {
 	if err != nil {
 		logrus.Fatalf("Could not load Openstack auth options from environment : %s", err)
 	}
-	logrus.Warnf("ProviderClient %+v", opts)
 
 	provider, err := openstack.AuthenticatedClient(opts)
 	if err != nil {
 		logrus.Fatalf("Could not authenticate with Openstack : %s", err)
 	}
-	logrus.Warnf("ProvierClient %+v", provider)
 
 	client, err := openstack.NewObjectStorageV1(provider, gophercloud.EndpointOpts{})
 	if err != nil {

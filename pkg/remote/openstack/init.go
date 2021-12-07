@@ -3,9 +3,13 @@ package openstack
 import (
 	"github.com/cloudskiff/driftctl/pkg/alerter"
 	"github.com/cloudskiff/driftctl/pkg/output"
+	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	"github.com/cloudskiff/driftctl/pkg/remote/common"
+	"github.com/cloudskiff/driftctl/pkg/remote/openstack/repository"
 	"github.com/cloudskiff/driftctl/pkg/resource"
 	"github.com/cloudskiff/driftctl/pkg/terraform"
+	"github.com/gophercloud/gophercloud/openstack"
+	"github.com/sirupsen/logrus"
 )
 
 const RemoteOpenStackTerraform = "aws+tf"
@@ -48,14 +52,27 @@ func Init(
 		return err
 	}
 
-	// You'll need to create a new cache that will be used to cache fetched lists of resources
-	//	repositoryCache := cache.New(100)
+	opts, err := openstack.AuthOptionsFromEnv()
+	if err != nil {
+		logrus.Fatalf("Could not load Openstack auth options from environment : %s", err)
+	}
 
+	gopherProvider, err := openstack.AuthenticatedClient(opts)
+	if err != nil {
+		logrus.Fatalf("Could not authenticate with Openstack : %s", err)
+	}
+
+	// You'll need to create a new cache that will be used to cache fetched lists of resources
+	repositoryCache := cache.New(100)
+	ComputeRepository := repository.NewNovaRepository(gopherProvider, repositoryCache)
+	logrus.Infof("ComputeRepository %+v", ComputeRepository)
 	// Deserializer is used to convert cty value returned by Terraform provider to driftctl Resource
 	//	deserializer := resource.NewDeserializer(factory)
 
 	// Adding the provider to the library
 	providerLibrary.AddProvider(terraform.OPENSTACK, provider)
+
+	//remoteLibrary.AddEnumerator(NewComputeKeypairV2Enumerator(ComputeRepository, factory))
 
 	err = resourceSchemaRepository.Init(terraform.OPENSTACK, provider.Version(), provider.Schema())
 	if err != nil {

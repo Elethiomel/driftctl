@@ -8,6 +8,7 @@ import (
 	"github.com/cloudskiff/driftctl/pkg/remote/common"
 	"github.com/cloudskiff/driftctl/pkg/remote/github"
 	"github.com/cloudskiff/driftctl/pkg/remote/google"
+	"github.com/cloudskiff/driftctl/pkg/remote/openstack"
 	"github.com/cloudskiff/driftctl/pkg/resource"
 	"github.com/cloudskiff/driftctl/pkg/terraform"
 	"github.com/pkg/errors"
@@ -18,6 +19,7 @@ var supportedRemotes = []string{
 	common.RemoteGithubTerraform,
 	common.RemoteGoogleTerraform,
 	common.RemoteAzureTerraform,
+	common.RemoteOpenStackTerraform,
 }
 
 func IsSupported(remote string) bool {
@@ -45,6 +47,8 @@ func Activate(remote, version string, alerter *alerter.Alerter,
 		return google.Init(version, alerter, providerLibrary, remoteLibrary, progress, resourceSchemaRepository, factory, configDir)
 	case common.RemoteAzureTerraform:
 		return azurerm.Init(version, alerter, providerLibrary, remoteLibrary, progress, resourceSchemaRepository, factory, configDir)
+	case common.RemoteOpenStackTerraform:
+		return openstack.Init(version, alerter, providerLibrary, remoteLibrary, progress, resourceSchemaRepository, factory, configDir)
 
 	default:
 		return errors.Errorf("unsupported remote '%s'", remote)

@@ -7,6 +7,7 @@ import (
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/openstack"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/secgroups"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/flavors"
 	"github.com/gophercloud/gophercloud/pagination"
 	"github.com/sirupsen/logrus"
@@ -15,6 +16,7 @@ import (
 type NovaRepository interface {
 	ListAllKeypairs() ([]string, error)
 	ListAllFlavors() ([]string, error)
+	ListAllSecgroups() ([]string, error)
 }
 
 type novaRepository struct {
@@ -110,5 +112,39 @@ func (r *novaRepository) ListAllFlavors() ([]string, error) {
 	}
 
 	r.cache.Put("novaListAllFlavors", k)
+	return k, nil
+}
+func (r *novaRepository) ListAllSecgroups() ([]string, error) {
+	if v := r.cache.Get("novaListAllSecgroups"); v != nil {
+		return v.([]string), nil
+	}
+
+	k := make([]string, 0)
+
+	allPages, err := secgroups.List(r.client).AllPages()
+	if err != nil {
+		panic(err)
+	}
+
+	allSecgroups, err := secgroups.ExtractSecurityGroups(allPages)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, secgroup := range allSecgroups {
+		k = append(k, secgroup.ID)
+		logrus.Infof("secgroup %s\n", secgroup.ID)
+		fmt.Printf("%+v\n", secgroup)
+	}
+
+	if err != nil {
+		logrus.Infof("Error 2 paging through objects : %s", err)
+	}
+
+	if len(k) == 0 {
+		return k, fmt.Errorf("no secgroups found")
+	}
+
+	r.cache.Put("novaListAllSecgroups", k)
 	return k, nil
 }

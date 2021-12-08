@@ -75,6 +75,7 @@ func Init(
 
 	remoteLibrary.AddEnumerator(NewComputeKeypairV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeFlavorV2Enumerator(NovaRepository, factory))
+	remoteLibrary.AddEnumerator(NewComputeInstanceV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeSecgroupV2Enumerator(NovaRepository, factory))
 
 	err = resourceSchemaRepository.Init(terraform.OPENSTACK, provider.Version(), provider.Schema())

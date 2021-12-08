@@ -6,4 +6,5 @@ func InitResourcesMetadata(resourceSchemaRepository resource.SchemaRepositoryInt
 	initOpenStackComputeKeypairV2MetaData(resourceSchemaRepository)
 	initOpenStackComputeFlavorV2MetaData(resourceSchemaRepository)
 	initOpenStackComputeSecgroupV2MetaData(resourceSchemaRepository)
+	initOpenStackComputeInstanceV2MetaData(resourceSchemaRepository)
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/secgroups"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/flavors"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 	"github.com/gophercloud/gophercloud/pagination"
 	"github.com/sirupsen/logrus"
 )
@@ -17,6 +18,7 @@ type NovaRepository interface {
 	ListAllKeypairs() ([]string, error)
 	ListAllFlavors() ([]string, error)
 	ListAllSecgroups() ([]string, error)
+	ListAllInstances() ([]string, error)
 }
 
 type novaRepository struct {
@@ -114,6 +116,42 @@ func (r *novaRepository) ListAllFlavors() ([]string, error) {
 	r.cache.Put("novaListAllFlavors", k)
 	return k, nil
 }
+
+func (r *novaRepository) ListAllInstances() ([]string, error) {
+	if v := r.cache.Get("novaListAllInstances"); v != nil {
+		return v.([]string), nil
+	}
+
+	k := make([]string, 0)
+
+	allPages, err := servers.List(r.client, servers.ListOpts{}).AllPages()
+	if err != nil {
+		panic(err)
+	}
+
+	allInstances, err := servers.ExtractServers(allPages)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, instance := range allInstances {
+		k = append(k, instance.ID)
+		logrus.Infof("instance %s\n", instance.ID)
+		fmt.Printf("%+v\n", instance)
+	}
+
+	if err != nil {
+		logrus.Infof("Error 2 paging through objects : %s", err)
+	}
+
+	if len(k) == 0 {
+		return k, fmt.Errorf("no instances found")
+	}
+
+	r.cache.Put("novaListAllInstances", k)
+	return k, nil
+}
+
 func (r *novaRepository) ListAllSecgroups() ([]string, error) {
 	if v := r.cache.Get("novaListAllSecgroups"); v != nil {
 		return v.([]string), nil

@@ -215,6 +215,7 @@ var supportedTypes = map[string]ResourceTypeMeta{
 	"openstack_compute_keypair_v2":     {},
 	"openstack_compute_flavor_v2":      {},
 	"openstack_compute_secgroup_v2":    {},
+	"openstack_compute_instance_v2":    {},
 }
 
 func IsResourceTypeSupported(ty string) bool {

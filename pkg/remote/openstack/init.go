@@ -66,17 +66,21 @@ func Init(
 	// You'll need to create a new cache that will be used to cache fetched lists of resources
 	repositoryCache := cache.New(100)
 	NovaRepository := repository.NewNovaRepository(gopherProvider, repositoryCache)
-	logrus.Infof("NovaRepository %+v", NovaRepository)
+	CinderRepository := repository.NewCinderRepository(gopherProvider, repositoryCache)
 	// Deserializer is used to convert cty value returned by Terraform provider to driftctl Resource
 	//	deserializer := resource.NewDeserializer(factory)
 
 	// Adding the provider to the library
 	providerLibrary.AddProvider(terraform.OPENSTACK, provider)
 
+	//Nova
 	remoteLibrary.AddEnumerator(NewComputeKeypairV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeFlavorV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeInstanceV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeSecgroupV2Enumerator(NovaRepository, factory))
+
+	//Cinder
+	remoteLibrary.AddEnumerator(NewBlockstorageVolumeV2Enumerator(CinderRepository, factory))
 
 	err = resourceSchemaRepository.Init(terraform.OPENSTACK, provider.Version(), provider.Schema())
 	if err != nil {

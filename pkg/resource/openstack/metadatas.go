@@ -8,4 +8,5 @@ func InitResourcesMetadata(resourceSchemaRepository resource.SchemaRepositoryInt
 	initOpenStackComputeSecgroupV2MetaData(resourceSchemaRepository)
 	initOpenStackComputeInstanceV2MetaData(resourceSchemaRepository)
 	initOpenStackBlockstorageVolumeV2MetaData(resourceSchemaRepository)
+	initOpenStackNetworkingPortV2MetaData(resourceSchemaRepository)
 }

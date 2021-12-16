@@ -13,7 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const RemoteOpenStackTerraform = "aws+tf"
+const RemoteOpenStackTerraform = "openstack+tf"
 
 /**
  * Initialize remote (configure credentials, launch tf providers and start gRPC clients)
@@ -67,6 +67,7 @@ func Init(
 	repositoryCache := cache.New(100)
 	NovaRepository := repository.NewNovaRepository(gopherProvider, repositoryCache)
 	CinderRepository := repository.NewCinderRepository(gopherProvider, repositoryCache)
+	NeutronRepository := repository.NewNeutronRepository(gopherProvider, repositoryCache)
 	// Deserializer is used to convert cty value returned by Terraform provider to driftctl Resource
 	//	deserializer := resource.NewDeserializer(factory)
 
@@ -81,6 +82,9 @@ func Init(
 
 	//Cinder
 	remoteLibrary.AddEnumerator(NewBlockstorageVolumeV2Enumerator(CinderRepository, factory))
+
+	//Neutron
+	remoteLibrary.AddEnumerator(NewNetworkingPortV2Enumerator(NeutronRepository, factory))
 
 	err = resourceSchemaRepository.Init(terraform.OPENSTACK, provider.Version(), provider.Schema())
 	if err != nil {

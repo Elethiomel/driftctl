@@ -159,31 +159,30 @@ func (r *neutronRepository) ListAllRouterInterfaces() ([]string, error) {
 
 	k := make([]string, 0)
 
-	logrus.Warn("LISTALLROUTERINTERFACES is a STUB")
-	//allPages, err := routerInterfaces.List(r.client, routerInterfaces.ListOpts{}).AllPages()
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	//allRouterInterfaces, err := routerInterfaces.ExtractRouterInterfaces(allPages)
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	//for _, routerInterface := range allRouterInterfaces {
-	//	k = append(k, routerInterface.ID)
-	//	logrus.Infof("routerInterface %s\n", routerInterface.ID)
-	//	fmt.Printf("%+v\n", routerInterface)
-	//}
-
-	//if err != nil {
-	//	logrus.Infof("Error 2 paging through objects : %s", err)
-	//}
-
-	//if len(k) == 0 {
-	//	return k, fmt.Errorf("no routerInterfaces found")
-	//}
-
+	//	allPages, err := routers.List(r.client, routers.ListOpts{}).AllPages()
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	allRouters, err := routers.ExtractRouters(allPages)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//
+	//	for _, router := range allRouters {
+	//		k = append(k, router.)
+	//		logrus.Infof("router %s\n", router.ID)
+	//		fmt.Printf("%+v\n", router)
+	//	}
+	//
+	//	if err != nil {
+	//		logrus.Infof("Error 2 paging through objects : %s", err)
+	//	}
+	//
+	//	if len(k) == 0 {
+	//		return k, fmt.Errorf("no routers found")
+	//	}
+	//
 	r.cache.Put("neutronListAllRouterInterfaces", k)
 	return k, nil
 }

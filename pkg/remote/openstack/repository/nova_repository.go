@@ -6,6 +6,7 @@ import (
 	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/openstack"
+	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/attachinterfaces"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/keypairs"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/secgroups"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/extensions/volumeattach"
@@ -210,7 +211,7 @@ func (r *novaRepository) ListAllVolumeAttachments() ([]string, error) {
 		}
 
 		for _, volumeAttachment := range allVolumeAttachments {
-			k = append(k, volumeAttachment.ID)
+			k = append(k, instance+"/"+volumeAttachment.ID)
 			logrus.Infof("volumeAttachment %s\n", volumeAttachment.ID)
 			fmt.Printf("%+v\n", volumeAttachment)
 		}
@@ -240,37 +241,37 @@ func (r *novaRepository) ListAllInterfaceAttachments() ([]string, error) {
 
 	logrus.Warn("LISTALLINTERFACEATTACHMENTS is a STUB")
 
-	//	instances, err := r.ListAllInstances()
-	//
-	//	for _, instance := range instances {
-	//		allPages, err := attachinterfaces.List(r.client, instance).AllPages()
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//
-	//		allInterfaceAttachments, err := attachinterfaces.ExtractInterfaces(allPages)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//
-	//		for _, interfaceAttachment := range allInterfaceAttachments {
-	//			k = append(k, interfaceAttachment.
-	//			logrus.Infof("interfaceAttachment %s\n", interfaceAttachment.ID)
-	//			fmt.Printf("%+v\n", interfaceAttachment)
-	//		}
-	//
-	//		if err != nil {
-	//			logrus.Infof("Error 2 paging through objects : %s", err)
-	//		}
-	//
-	//	}
-	//	if err != nil {
-	//		logrus.Infof("Error 2 paging through objects : %s", err)
-	//	}
-	//
-	//	if len(k) == 0 {
-	//		return k, fmt.Errorf("no interfaceAttachments found")
-	//	}
+	instances, err := r.ListAllInstances()
+
+	for _, instance := range instances {
+		allPages, err := attachinterfaces.List(r.client, instance).AllPages()
+		if err != nil {
+			panic(err)
+		}
+
+		allInterfaceAttachments, err := attachinterfaces.ExtractInterfaces(allPages)
+		if err != nil {
+			panic(err)
+		}
+
+		for _, interfaceAttachment := range allInterfaceAttachments {
+			k = append(k, instance+"/"+interfaceAttachment.PortID)
+			logrus.Infof("interfaceAttachment %s\n", interfaceAttachment.PortID)
+			fmt.Printf("%+v\n", interfaceAttachment)
+		}
+
+		if err != nil {
+			logrus.Infof("Error 2 paging through objects : %s", err)
+		}
+
+	}
+	if err != nil {
+		logrus.Infof("Error 2 paging through objects : %s", err)
+	}
+
+	if len(k) == 0 {
+		return k, fmt.Errorf("no interfaceAttachments found")
+	}
 
 	r.cache.Put("novaListAllInterfaceAttachments", k)
 	return k, nil

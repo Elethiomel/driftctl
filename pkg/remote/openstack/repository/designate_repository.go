@@ -55,8 +55,8 @@ func (r *designateRepository) ListAllRecordsets() ([]string, error) {
 			}
 
 			for _, n := range recordsetsList {
-				k = append(k, n.Name)
-				logrus.Infof("keypair %s\n", n.Name)
+				k = append(k, zone+"/"+n.ID)
+				logrus.Infof("keypair %s\n", n.ID)
 			}
 
 			if err != nil {

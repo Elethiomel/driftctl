@@ -68,6 +68,8 @@ func Init(
 	NovaRepository := repository.NewNovaRepository(gopherProvider, repositoryCache)
 	CinderRepository := repository.NewCinderRepository(gopherProvider, repositoryCache)
 	NeutronRepository := repository.NewNeutronRepository(gopherProvider, repositoryCache)
+	DesignateRepository := repository.NewDesignateRepository(gopherProvider, repositoryCache)
+	GlanceRepository := repository.NewGlanceRepository(gopherProvider, repositoryCache)
 	// Deserializer is used to convert cty value returned by Terraform provider to driftctl Resource
 	//	deserializer := resource.NewDeserializer(factory)
 
@@ -79,12 +81,28 @@ func Init(
 	remoteLibrary.AddEnumerator(NewComputeFlavorV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeInstanceV2Enumerator(NovaRepository, factory))
 	remoteLibrary.AddEnumerator(NewComputeSecgroupV2Enumerator(NovaRepository, factory))
+	remoteLibrary.AddEnumerator(NewComputeVolumeAttachV2Enumerator(NovaRepository, factory))
+	remoteLibrary.AddEnumerator(NewComputeInterfaceAttachV2Enumerator(NovaRepository, factory))
 
 	//Cinder
 	remoteLibrary.AddEnumerator(NewBlockstorageVolumeV2Enumerator(CinderRepository, factory))
 
 	//Neutron
 	remoteLibrary.AddEnumerator(NewNetworkingPortV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingFloatingipV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingNetworkV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingRouterInterfaceV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingRouterV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingSecgroupRuleV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingSecgroupV2Enumerator(NeutronRepository, factory))
+	remoteLibrary.AddEnumerator(NewNetworkingSubnetV2Enumerator(NeutronRepository, factory))
+
+	//Designate
+	remoteLibrary.AddEnumerator(NewDNSRecordsetV2Enumerator(DesignateRepository, factory))
+	remoteLibrary.AddEnumerator(NewDNSZoneV2Enumerator(DesignateRepository, factory))
+
+	//Glance
+	remoteLibrary.AddEnumerator(NewImagesImageV2Enumerator(GlanceRepository, factory))
 
 	err = resourceSchemaRepository.Init(terraform.OPENSTACK, provider.Version(), provider.Schema())
 	if err != nil {

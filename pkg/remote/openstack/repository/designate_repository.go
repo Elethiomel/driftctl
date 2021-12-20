@@ -28,7 +28,6 @@ func NewDesignateRepository(providerClient *gophercloud.ProviderClient, c cache.
 		logrus.Fatalf("Could not create Openstack Client for Designate : %s", err)
 	}
 
-	logrus.Infof("KEYPAIR %+v\n", client)
 	return &designateRepository{
 		client,
 		c,
@@ -56,7 +55,6 @@ func (r *designateRepository) ListAllRecordsets() ([]string, error) {
 
 			for _, n := range recordsetsList {
 				k = append(k, zone+"/"+n.ID)
-				logrus.Infof("keypair %s\n", n.ID)
 			}
 
 			if err != nil {
@@ -100,8 +98,6 @@ func (r *designateRepository) ListAllZones() ([]string, error) {
 
 	for _, zone := range allZones {
 		k = append(k, zone.ID)
-		logrus.Infof("zone %s\n", zone.ID)
-		fmt.Printf("%+v\n", zone)
 	}
 
 	//pager := zones.List(r.client, zone.ListOpts{})

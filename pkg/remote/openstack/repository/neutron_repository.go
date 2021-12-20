@@ -64,8 +64,6 @@ func (r *neutronRepository) ListAllPorts() ([]string, error) {
 
 	for _, port := range allPorts {
 		k = append(k, port.ID)
-		logrus.Infof("port %s\n", port.ID)
-		fmt.Printf("%+v\n", port)
 	}
 
 	//pager := ports.List(r.client, port.ListOpts{})
@@ -103,8 +101,6 @@ func (r *neutronRepository) ListAllFloatingips() ([]string, error) {
 
 	for _, floatingip := range allFloatingips {
 		k = append(k, floatingip.ID)
-		logrus.Infof("floatingip %s\n", floatingip.ID)
-		fmt.Printf("%+v\n", floatingip)
 	}
 
 	if err != nil {
@@ -137,8 +133,6 @@ func (r *neutronRepository) ListAllNetworks() ([]string, error) {
 
 	for _, network := range allNetworks {
 		k = append(k, network.ID)
-		logrus.Infof("network %s\n", network.ID)
-		fmt.Printf("%+v\n", network)
 	}
 
 	if err != nil {
@@ -152,6 +146,7 @@ func (r *neutronRepository) ListAllNetworks() ([]string, error) {
 	r.cache.Put("neutronListAllNetworks", k)
 	return k, nil
 }
+
 func (r *neutronRepository) ListAllRouterInterfaces() ([]string, error) {
 	if v := r.cache.Get("neutronListAllRouterInterfaces"); v != nil {
 		return v.([]string), nil
@@ -159,33 +154,35 @@ func (r *neutronRepository) ListAllRouterInterfaces() ([]string, error) {
 
 	k := make([]string, 0)
 
-	//	allPages, err := routers.List(r.client, routers.ListOpts{}).AllPages()
-	//	if err != nil {
-	//		panic(err)
-	//	}
+	//      allPages, err := routers.List(r.client, routers.ListOpts{}).AllPages()
+	//      if err != nil {
+	//              panic(err)
+	//      }
 	//
-	//	allRouters, err := routers.ExtractRouters(allPages)
-	//	if err != nil {
-	//		panic(err)
-	//	}
+	//      allRouters, err := routers.ExtractRouters(allPages)
+	//      if err != nil {
+	//              panic(err)
+	//      }
 	//
-	//	for _, router := range allRouters {
-	//		k = append(k, router.)
-	//		logrus.Infof("router %s\n", router.ID)
-	//		fmt.Printf("%+v\n", router)
-	//	}
+	//      for _, router := range allRouters {
+	//              k = append(k, router.)
+	//              logrus.Infof("router %s\n", router.ID)
+	//              fmt.Printf("%+v\n", router)
+	//      }
 	//
-	//	if err != nil {
-	//		logrus.Infof("Error 2 paging through objects : %s", err)
-	//	}
+	//      if err != nil {
+	//              logrus.Infof("Error 2 paging through objects : %s", err)
+	//      }
 	//
-	//	if len(k) == 0 {
-	//		return k, fmt.Errorf("no routers found")
-	//	}
+	//      if len(k) == 0 {
+	//              return k, fmt.Errorf("no routers found")
+	//      }
 	//
 	r.cache.Put("neutronListAllRouterInterfaces", k)
 	return k, nil
+
 }
+
 func (r *neutronRepository) ListAllRouters() ([]string, error) {
 	if v := r.cache.Get("neutronListAllRouters"); v != nil {
 		return v.([]string), nil
@@ -205,8 +202,6 @@ func (r *neutronRepository) ListAllRouters() ([]string, error) {
 
 	for _, router := range allRouters {
 		k = append(k, router.ID)
-		logrus.Infof("router %s\n", router.ID)
-		fmt.Printf("%+v\n", router)
 	}
 
 	if err != nil {
@@ -239,8 +234,6 @@ func (r *neutronRepository) ListAllSecgroupRules() ([]string, error) {
 
 	for _, secgroupRule := range allSecgroupRules {
 		k = append(k, secgroupRule.ID)
-		logrus.Infof("secgroupRule %s\n", secgroupRule.ID)
-		fmt.Printf("%+v\n", secgroupRule)
 	}
 
 	if err != nil {
@@ -273,8 +266,6 @@ func (r *neutronRepository) ListAllSecgroups() ([]string, error) {
 
 	for _, secgroup := range allSecgroups {
 		k = append(k, secgroup.ID)
-		logrus.Infof("secgroup %s\n", secgroup.ID)
-		fmt.Printf("%+v\n", secgroup)
 	}
 
 	if err != nil {
@@ -307,8 +298,6 @@ func (r *neutronRepository) ListAllSubnets() ([]string, error) {
 
 	for _, subnet := range allSubnets {
 		k = append(k, subnet.ID)
-		logrus.Infof("subnet %s\n", subnet.ID)
-		fmt.Printf("%+v\n", subnet)
 	}
 
 	if err != nil {

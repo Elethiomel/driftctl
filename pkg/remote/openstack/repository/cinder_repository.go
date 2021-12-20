@@ -50,8 +50,6 @@ func (r *cinderRepository) ListAllVolumes() ([]string, error) {
 
 	for _, volume := range allVolumes {
 		k = append(k, volume.ID)
-		logrus.Infof("volume %s\n", volume.ID)
-		fmt.Printf("%+v\n", volume)
 	}
 
 	if err != nil {

@@ -36,7 +36,6 @@ func NewNovaRepository(providerClient *gophercloud.ProviderClient, c cache.Cache
 		logrus.Fatalf("Could not create Openstack Client for Nova : %s", err)
 	}
 
-	logrus.Infof("KEYPAIR %+v\n", client)
 	return &novaRepository{
 		client,
 		c,
@@ -60,7 +59,6 @@ func (r *novaRepository) ListAllKeypairs() ([]string, error) {
 
 		for _, n := range keypairsList {
 			k = append(k, n.Name)
-			logrus.Infof("keypair %s\n", n.Name)
 		}
 
 		if err != nil {
@@ -101,8 +99,6 @@ func (r *novaRepository) ListAllFlavors() ([]string, error) {
 
 	for _, flavor := range allFlavors {
 		k = append(k, flavor.ID)
-		logrus.Infof("flavor %s\n", flavor.ID)
-		fmt.Printf("%+v\n", flavor)
 	}
 
 	//pager := flavors.List(r.client, flavor.ListOpts{})
@@ -140,8 +136,6 @@ func (r *novaRepository) ListAllInstances() ([]string, error) {
 
 	for _, instance := range allInstances {
 		k = append(k, instance.ID)
-		logrus.Infof("instance %s\n", instance.ID)
-		fmt.Printf("%+v\n", instance)
 	}
 
 	if err != nil {
@@ -175,8 +169,6 @@ func (r *novaRepository) ListAllSecgroups() ([]string, error) {
 
 	for _, secgroup := range allSecgroups {
 		k = append(k, secgroup.ID)
-		logrus.Infof("secgroup %s\n", secgroup.ID)
-		fmt.Printf("%+v\n", secgroup)
 	}
 
 	if err != nil {
@@ -212,8 +204,6 @@ func (r *novaRepository) ListAllVolumeAttachments() ([]string, error) {
 
 		for _, volumeAttachment := range allVolumeAttachments {
 			k = append(k, instance+"/"+volumeAttachment.ID)
-			logrus.Infof("volumeAttachment %s\n", volumeAttachment.ID)
-			fmt.Printf("%+v\n", volumeAttachment)
 		}
 
 		if err != nil {
@@ -256,8 +246,6 @@ func (r *novaRepository) ListAllInterfaceAttachments() ([]string, error) {
 
 		for _, interfaceAttachment := range allInterfaceAttachments {
 			k = append(k, instance+"/"+interfaceAttachment.PortID)
-			logrus.Infof("interfaceAttachment %s\n", interfaceAttachment.PortID)
-			fmt.Printf("%+v\n", interfaceAttachment)
 		}
 
 		if err != nil {

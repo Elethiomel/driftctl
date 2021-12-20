@@ -25,7 +25,6 @@ func NewGlanceRepository(providerClient *gophercloud.ProviderClient, c cache.Cac
 		logrus.Fatalf("Could not create Openstack Client for Glance : %s", err)
 	}
 
-	logrus.Infof("KEYPAIR %+v\n", client)
 	return &glanceRepository{
 		client,
 		c,
@@ -51,8 +50,6 @@ func (r *glanceRepository) ListAllImages() ([]string, error) {
 
 	for _, image := range allImages {
 		k = append(k, image.ID)
-		logrus.Infof("image %s\n", image.ID)
-		fmt.Printf("%+v\n", image)
 	}
 
 	//pager := images.List(r.client, image.ListOpts{})
